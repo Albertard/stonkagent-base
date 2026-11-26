@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StonkAgent — Daily AI Research on Coinbase Tokenized Stocks (Base)</title>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;max-width:960px;margin:0 auto;padding:24px;color:#111;background:#fff}
+h1{font-size:26px;margin:0 0 4px}h2{font-size:19px;margin-top:28px;border-bottom:1px solid #ddd;padding-bottom:4px}
+.sub{color:#555;margin:0 0 16px}.card{border:1px solid #ddd;border-radius:10px;padding:14px;margin:10px 0}
+table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid #eee;padding:7px 6px;text-align:left;font-size:14px}
+th{color:#555}.up{color:#0a7d2c}.down{color:#c0392b}.pill{display:inline-block;background:#eef4ff;border-radius:999px;padding:2px 10px;font-size:12px;margin-right:6px}
+a{color:#0b5fff}.foot{color:#777;font-size:12px;margin-top:28px}
+code{background:#f4f4f4;padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<h1>📈 StonkAgent</h1>
+<p class="sub">Daily AI research agent for Coinbase tokenized stocks on Base.
+Paper trading simulation — <b>not investment advice</b>. Built for the
+<a href="https://base.org/stocksmaxxing">Base Stocks Maxxing Season</a>
+(Agentic Stock Finance track).</p>
+<div id="meta"></div>
+<h2>🎯 Today's picks (top momentum, paper BUY)</h2>
+<div id="picks"></div>
+<h2>🔥 Most active (24h volume)</h2>
+<div id="active"></div>
+<h2>💲 Cheapest vs NAV (Chainlink)</h2>
+<div id="nav"></div>
+<h2>📉 Avoid (biggest 24h losers)</h2>
+<div id="losers"></div>
+<h2>💼 Paper portfolio</h2>
+<div id="portfolio"></div>
+<h2>⛓️ Onchain journal</h2>
+<div id="journal"></div>
+<p class="foot">Data: Coinbase Tokenized Stocks API + DexScreener (Aerodrome/Base) +
+Chainlink NAV feeds. Decisions are logged to the AgentJournal contract on
+Base Sepolia testnet. StonkAgent holds no real assets and never gives buy/sell
+recommendations. <span id="gen"></span></p>
+<script>
+const B = {"date": "2026-11-26", "generated_at_utc": "2026-11-26T23:09:19.560787+00:00", "universe": {"tokens_total": 54, "eligible": 28, "with_nav_feed": 13, "prices_source": "DexScreener (Base/Aerodrome)", "tokens_source": "Coinbase Tokenized Stocks API"}, "top_momentum": [{"symbol": "MRVLc", "name": "Marvell Technology, Inc.", "price_usd": 132.88, "price_change_h24": 2.25, "price_change_h6": -0.3, "price_change_h1": -0.87, "momentum_score": 0.861, "volume_h24": 38691.13, "liquidity_usd": 230070.1, "pair_url": "https://dexscreener.com/base/0x611ab290422d534d9595b01e648911fefa963137"}, {"symbol": "HIMSc", "name": "Hims & Hers Health, Inc.", "price_usd": 14.95, "price_change_h24": 1.63, "price_change_h6": 0.1, "price_change_h1": -0.36, "momentum_score": 0.773, "volume_h24": 1649633.38, "liquidity_usd": 262533.71, "pair_url": "https://dexscreener.com/base/0x41d7793faa4ca181b6f021423ff3f9015c00b2ff"}, {"symbol": "SPCXc", "name": "Space Exploration Technologies Corp.", "price_usd": 129.25, "price_change_h24": 1.44, "price_change_h6": -0.1, "price_change_h1": -0.3, "momentum_score": 0.63, "volume_h24": 8156757.46, "liquidity_usd": 1060524.52, "pair_url": "https://dexscreener.com/base/0x880db7dda4407d99508574e680d067d1164b3cfe"}, {"symbol": "ORCLc", "name": "Oracle Corporation", "price_usd": 105.8, "price_change_h24": 1.28, "price_change_h6": 0.05, "price_change_h1": -0.33, "momentum_score": 0.589, "volume_h24": 2550835.13, "liquidity_usd": 281306.6, "pair_url": "https://dexscreener.com/base/0x62b5452e80e50b047dcf6dd3fb6a1d266c678eb5"}, {"symbol": "BEc", "name": "Bloom Energy Corporation", "price_usd": 155.48, "price_change_h24": 1.36, "price_change_h6": 0.06, "price_change_h1": -0.64, "momentum_score": 0.57, "volume_h24": 85791.52, "liquidity_usd": 224353.17, "pair_url": "https://dexscreener.com/base/0xde2bfe5409ad9e825cdb3562a06edafb9d753dfc"}], "most_active": [{"symbol": "NVDAc", "name": "NVIDIA Corporation", "price_usd": 150.56, "price_change_h24": 0.6, "volume_h24": 38946696.39, "txns_h24_buys": 10346, "txns_h24_sells": 9928, "pair_url": "https://dexscreener.com/base/0xf668e21993f0acd7ab00bb1cfbaed0df28a3c8ec"}, {"symbol": "SNDKc", "name": "Sandisk Corporation", "price_usd": 594.96, "price_change_h24": 0.75, "volume_h24": 27445443.73, "txns_h24_buys": 12181, "txns_h24_sells": 12727, "pair_url": "https://dexscreener.com/base/0x2836e062a3fe75943a7f4a552e2365b98e414e75"}, {"symbol": "GOOGLc", "name": "Alphabet Inc.", "price_usd": 275.44, "price_change_h24": 0.68, "volume_h24": 15362836.67, "txns_h24_buys": 4596, "txns_h24_sells": 4193, "pair_url": "https://dexscreener.com/base/0x16c70f04c3080a127486cdf5a4c33c066bbf47c3"}, {"symbol": "AMZNc", "name": "Amazon.com Inc.", "price_usd": 246.34, "price_change_h24": 0.5, "volume_h24": 13344769.39, "txns_h24_buys": 3422, "txns_h24_sells": 2951, "pair_url": "https://dexscreener.com/base/0x532e0f46d1e528507fc9454d5847c231f23bddf6"}, {"symbol": "METAc", "name": "Meta Platforms Inc.", "price_usd": 611.65, "price_change_h24": 0.61, "volume_h24": 12320944.23, "txns_h24_buys": 3510, "txns_h24_sells": 3520, "pair_url": "https://dexscreener.com/base/0xd072410fa13d242e1d53721bcf7af02e3455dc96"}], "cheapest_vs_nav": [{"symbol": "SNDKc", "name": "Sandisk Corporation", "price_usd": 594.96, "nav_price": 612.696, "nav_discount_pct": 2.89, "pair_url": "https://dexscreener.com/base/0x2836e062a3fe75943a7f4a552e2365b98e414e75"}, {"symbol": "ANTc", "name": "Anthropic, PBC", "price_usd": 83.31, "nav_price": 84.35, "nav_discount_pct": 1.23, "pair_url": "https://dexscreener.com/base/0x599c4225fe90214795a0be228d20d7680f8ced15"}, {"symbol": "MSTRc", "name": "Strategy Inc.", "price_usd": 81.22, "nav_price": 82.1, "nav_discount_pct": 1.07, "pair_url": "https://dexscreener.com/base/0x66dcd42e6314b287110922ae36cb2a8bdeecc153"}], "avoid_losers": [{"symbol": "TTWOc", "name": "Take-Two Interactive Software, Inc.", "price_usd": 223.97, "price_change_h24": -0.94, "volume_h24": 1145027.02, "pair_url": "https://dexscreener.com/base/0x18907cae5a9c7b45f85c5d2e1f7508c27c134f83"}, {"symbol": "KOc", "name": "The Coca-Cola Company", "price_usd": 97.29, "price_change_h24": -0.47, "volume_h24": 20510.06, "pair_url": "https://dexscreener.com/base/0x59c7a81e752fca11b89e29fa98e56a6f2ead5fb3"}, {"symbol": "MCDc", "name": "McDonald's Corporation", "price_usd": 283.72, "price_change_h24": -0.1, "volume_h24": 35225.74, "pair_url": "https://dexscreener.com/base/0x743f16ee460ab7401321e7f35c3fd187eff7d711"}, {"symbol": "NFLXc", "name": "Netflix Inc", "price_usd": 59.22, "price_change_h24": -0.01, "volume_h24": 2274096.61, "pair_url": "https://dexscreener.com/base/0x67ba8dbedc6d7f93f0f5967aa2420715f1edc756"}, {"symbol": "ANTc", "name": "Anthropic, PBC", "price_usd": 83.31, "price_change_h24": 0.03, "volume_h24": 6331361.76, "pair_url": "https://dexscreener.com/base/0x599c4225fe90214795a0be228d20d7680f8ced15"}], "paper_portfolio": {"capital_usd": 10000.0, "start_capital_usd": 10000.0, "pnl_usd": 0.0, "pnl_pct": 0.0, "note": "opened today", "holdings": [{"symbol": "MRVLc", "units": 15.051174, "entry_price_usd": 132.88, "value_usd": 2000.0}, {"symbol": "HIMSc", "units": 133.779264, "entry_price_usd": 14.95, "value_usd": 2000.0}, {"symbol": "SPCXc", "units": 15.473888, "entry_price_usd": 129.25, "value_usd": 2000.0}, {"symbol": "ORCLc", "units": 18.903592, "entry_price_usd": 105.8, "value_usd": 2000.0}, {"symbol": "BEc", "units": 12.863391, "entry_price_usd": 155.48, "value_usd": 2000.0}]}, "disclaimer": "Paper trading simulation only. Not investment advice. StonkAgent holds no real assets and gives no recommendation to buy or sell."};
+const J = null;
+const fmt = n => n==null ? 'n/a' : (n>=0?'+':'') + n.toFixed(2);
+const money = n => n==null ? 'n/a' : '$' + n.toLocaleString(undefined,{maximumFractionDigits:2});
+document.getElementById('meta').innerHTML =
+ `<p><span class="pill">📅 ${B.date}</span><span class="pill">Universe: ${B.universe.tokens_total} tokens</span>`+
+ `<span class="pill">Eligible: ${B.universe.eligible}</span><span class="pill">NAV feeds: ${B.universe.with_nav_feed}</span></p>`;
+const rows = (list, cols) => '<table><tr>'+cols.map(c=>`<th>${c[0]}</th>`).join('')+'</tr>'+
+ list.map(t=>'<tr>'+cols.map(c=>`<td>${c[1](t)}</td>`).join('')+'</tr>').join('')+'</table>';
+document.getElementById('picks').innerHTML = rows(B.top_momentum, [
+ ['Token', t=>`<b>${t.symbol}</b> ${t.name}`],
+ ['Price', t=>money(t.price_usd)],
+ ['24h', t=>`<span class="${t.price_change_h24>=0?'up':'down'}">${fmt(t.price_change_h24)}%</span>`],
+ ['Score', t=>fmt(t.momentum_score)],
+ ['Vol 24h', t=>money(t.volume_h24)],
+ ['Pair', t=>`<a href="${t.pair_url}" target="_blank">DexScreener ↗</a>`],
+]);
+document.getElementById('active').innerHTML = rows(B.most_active, [
+ ['Token', t=>`<b>${t.symbol}</b>`],
+ ['Price', t=>money(t.price_usd)],
+ ['24h', t=>`<span class="${t.price_change_h24>=0?'up':'down'}">${fmt(t.price_change_h24)}%</span>`],
+ ['Vol 24h', t=>money(t.volume_h24)],
+ ['Buys/Sells', t=>`${t.txns_h24_buys} / ${t.txns_h24_sells}`],
+]);
+document.getElementById('nav').innerHTML = B.cheapest_vs_nav.length ? rows(B.cheapest_vs_nav, [
+ ['Token', t=>`<b>${t.symbol}</b>`],
+ ['Price', t=>money(t.price_usd)],
+ ['NAV', t=>money(t.nav_price)],
+ ['Discount', t=>`<span class="up">${fmt(t.nav_discount_pct)}%</span>`],
+]) : '<p>No NAV-priced token in the eligible pool today.</p>';
+document.getElementById('losers').innerHTML = rows(B.avoid_losers, [
+ ['Token', t=>`<b>${t.symbol}</b>`],
+ ['Price', t=>money(t.price_usd)],
+ ['24h', t=>`<span class="down">${fmt(t.price_change_h24)}%</span>`],
+ ['Vol 24h', t=>money(t.volume_h24)],
+]);
+const P = B.paper_portfolio;
+document.getElementById('portfolio').innerHTML =
+ `<div class="card"><b>Capital ${money(P.capital_usd)}</b> (start $10,000) — `+
+ `P&amp;L <span class="${P.pnl_usd>=0?'up':'down'}">${money(P.pnl_usd)} (${fmt(P.pnl_pct)}%)</span> — ${P.note}.`+
+ `<br><br>` + rows(P.holdings, [
+  ['Token', h=>`<b>${h.symbol}</b>`],
+  ['Units', h=>h.units],
+  ['Entry', h=>money(h.entry_price_usd)],
+  ['Value', h=>money(h.value_usd)],
+ ]) + '</div>';
+document.getElementById('journal').innerHTML = J ?
+ `<div class="card">Contract: <a href="${J.contract_basescan}" target="_blank"><code>${J.contract}</code> ↗</a><br>`+
+ J.entries.map(e=>`• <b>${e.symbol}</b> ${e.action} — <a href="${e.basescan}" target="_blank">tx ↗</a> (block ${e.block})`).join('<br>')+'</div>' :
+ '<p>Journal contract not deployed yet — first onchain entries land once the Base Sepolia deploy is funded.</p>';
+document.getElementById('gen').textContent = 'Generated ' + B.generated_at_utc + ' (UTC).';
+</script>
+</body>
+</html>
